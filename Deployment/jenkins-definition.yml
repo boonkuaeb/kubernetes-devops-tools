@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-master
+  labels:
+    app: jenkins-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins-master
+  template:
+    metadata:
+      labels:
+        app: jenkins-master
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: jenkins-master
+          image: jenkins/jenkins
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: "/var/jenkins_home"
+              name: jenkins-persistent-storage
+      volumes:
+        - name: jenkins-persistent-storage
+          persistentVolumeClaim:
+            claimName: jenkins-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-service
+  labels:
+    app: jenkins-service
+spec:
+  type: NodePort
+  ports:
+    - port: 9500
+      targetPort: 8080
+      name: jenkinsport
+  selector:
+    app: jenkins-master
+    type: LoadBalancer
