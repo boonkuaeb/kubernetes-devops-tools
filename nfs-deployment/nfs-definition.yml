@@ -45,4 +45,3 @@ spec:
       args:
         # Pass the paths to share to the Docker image
         - /exports
-

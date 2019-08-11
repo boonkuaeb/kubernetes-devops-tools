@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nexus-storage-pv
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 2Gi # This size is used to match a volume to a tenents claim
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.104.80.107
+    path: "/"

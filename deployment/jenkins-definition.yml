@@ -26,6 +26,7 @@ spec:
           volumeMounts:
             - mountPath: "/var/jenkins_home"
               name: jenkins-persistent-storage
+              subPath: "jenkins_home"
       volumes:
         - name: jenkins-persistent-storage
           persistentVolumeClaim:
@@ -39,11 +40,11 @@ metadata:
   labels:
     app: jenkins-service
 spec:
-  type: NodePort
   ports:
     - port: 9500
       targetPort: 8080
       name: jenkinsport
+      nodePort: 30101
   selector:
     app: jenkins-master
-    type: LoadBalancer
+  type: NodePort

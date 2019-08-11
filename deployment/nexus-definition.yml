@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus
+spec:
+  selector:
+    matchLabels:
+      app: nexus
+  replicas: 1
+  template:
+    metadata:
+      name: nexus
+      labels:
+        app: nexus
+    spec:
+      securityContext:
+        fsGroup: 2000
+      containers:
+        - name: nexus
+          image: sonatype/nexus3:3.8.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+              name: nexusport
+          volumeMounts:
+            - name: nexus-data
+              mountPath: /nexus-data
+              subPath: nexus-data
+      volumes:
+        - name: nexus-data
+          persistentVolumeClaim:
+            claimName: nexus-storage-pvc
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nexus
+  labels:
+    app: nexus-svc
+spec:
+  ports:
+    - port: 8081
+      targetPort: 8081
+      name: nexusport
+      nodePort: 30102
+  selector:
+    app: nexus
+  type: NodePort
