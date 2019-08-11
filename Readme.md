@@ -1,3 +1,19 @@
+# Start minikube
+```
+minikube start --cpus 4 --memory 12288
+
+```
+
+# Check minikube ip
+```
+minikube ip
+```
+# Open minikube dashboard
+```
+minikube dashbord
+```
+
+
 # Create NFS server ( optional )
 
 ```
